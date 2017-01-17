@@ -26,6 +26,9 @@ public class ToggleGarageService extends IntentService {
         String authToken = authentication.getString("authToken", "");
         SharedPreferences settings = getSharedPreferences("settings", 0);
         String uri = settings.getString("uri", "");
+        if ("".equals(uri) || "".equals(authToken)) {
+            return;
+        }
         final GarageOpener garageOpener = new GarageOpener(uri, authToken);
         try {
             final String originalState = garageOpener.getGarageState();

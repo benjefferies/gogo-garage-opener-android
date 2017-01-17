@@ -23,6 +23,9 @@ public class LoadStateService extends IntentService {
         String authToken = authentication.getString("authToken", "");
         SharedPreferences settings = getSharedPreferences("settings", 0);
         String uri = settings.getString("uri", "");
+        if ("".equals(uri) || "".equals(authToken)) {
+            return;
+        }
         GarageOpener garageOpener = new GarageOpener(uri, authToken);
         try {
             String state = garageOpener.getGarageState();

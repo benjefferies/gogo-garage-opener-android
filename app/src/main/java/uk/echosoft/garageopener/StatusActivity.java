@@ -19,6 +19,7 @@ public class StatusActivity extends AppCompatActivity {
     private Button stateButton;
     private AsyncTask<Void, Void, String> toggleGarageTask;
     private GarageOpener garageOpener;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,17 +60,12 @@ public class StatusActivity extends AppCompatActivity {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         this.stateButton = (Button) findViewById(R.id.action_garage_state);
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+        this.swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        try {
-                            refreshState().get();
-                        } catch (InterruptedException | ExecutionException e) {
-                            throw new RuntimeException(e);
-                        }
-                        swipeRefreshLayout.setRefreshing(false);
+                            refreshState();
                     }
                 }
         );
@@ -84,7 +80,7 @@ public class StatusActivity extends AppCompatActivity {
     }
 
     private AsyncTask<Void, Void, String> refreshState() {
-        LoadStateTask getStateTask = new LoadStateTask(this, garageOpener, stateButton);
+        LoadStateTask getStateTask = new LoadStateTask(this, garageOpener, stateButton, swipeRefreshLayout);
         return getStateTask.execute();
     }
 

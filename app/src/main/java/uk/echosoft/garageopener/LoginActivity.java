@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (!"".equals(authToken)) {
             Intent intent = new Intent(LoginActivity.this, StatusActivity.class);
             startActivity(intent);
+            finish();
         }
         this.login = new Login();
 
@@ -225,6 +226,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 authentication.edit().putString("authToken", result.getAuthToken()).apply();
                 Intent intent = new Intent(LoginActivity.this, StatusActivity.class);
                 startActivity(intent);
+                finish();
             } else {
                 passwordView.setError(getString(R.string.error_incorrect_password));
                 passwordView.requestFocus();
