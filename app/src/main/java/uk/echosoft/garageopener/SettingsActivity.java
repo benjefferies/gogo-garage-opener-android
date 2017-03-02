@@ -1,11 +1,12 @@
 package uk.echosoft.garageopener;
 
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.URLUtil;
 import android.widget.EditText;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -16,6 +17,7 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_settings, menu);
+
         return true;
     }
 
@@ -35,8 +37,12 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                save();
-                return true;
+                if (URLUtil.isValidUrl(garageOpenerTextField.getText().toString())) {
+                    save();
+                    return true;
+                } else {
+                    garageOpenerTextField.setError("malformed url, must start with http:// or https://");
+                }
             default:
                 return super.onOptionsItemSelected(item);
 
