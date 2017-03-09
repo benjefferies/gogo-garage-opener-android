@@ -22,8 +22,10 @@ import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 /**
  * A login screen that offers login via email/password.
@@ -36,7 +38,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText passwordView;
     private View progressView;
     private View loginFormView;
-    private Login login;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -56,7 +57,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             startActivity(intent);
             finish();
         }
-        this.login = new Login();
 
         // Set up the login form.
         emailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -92,6 +92,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         final String email = emailView.getText().toString();
         SharedPreferences authentication = getSharedPreferences("settings", 0);
         boolean isConfigured = authentication != null && !authentication.getString("uri", "").equals("");
+
         if (!isConfigured) {
             new AlertDialog.Builder(this)
                     .setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -108,8 +109,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             emailView.requestFocus();
         } else {
             final String password = passwordView.getText().toString();
+            final String server = authentication.getString("uri",null);
+
             showProgress(true);
-            UserLoginTask authTask = new UserLoginTask(email, password);
+
+            Toast.makeText(getApplicationContext(), "logging into " + server + " as " + emailView.getText().toString(), Toast.LENGTH_LONG).show();
+
+            UserLoginTask authTask = new UserLoginTask(email, password, server);
             authTask.execute();
         }
     }
@@ -186,7 +192,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
@@ -203,16 +208,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String email;
         private final String password;
+        private final String authenticationUrl;
 
-        UserLoginTask(String email, String password) {
+        /**
+         * authenticates using email, password and optional authentication url
+         *
+         * @param email - email to authenticate with
+         * @param password - password to authenticate with
+         * @param authenticationUrl - optional url to authenticate via a different service
+         */
+        UserLoginTask(String email, String password, String authenticationUrl) {
             this.email = email;
             this.password = password;
+            this.authenticationUrl = authenticationUrl;
         }
 
         @Override
         protected Login.LoginResult doInBackground(Void... params) {
             try {
-                return login.login(email, password);
+                return new Login(authenticationUrl).login(email, password);
+            } catch (UnknownHostException uhe) {
+                return Login.LoginResult.failure();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

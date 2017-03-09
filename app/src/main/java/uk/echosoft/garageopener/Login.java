@@ -37,9 +37,11 @@ class Login {
     }
 
     private final OkHttpClient client;
+    private final String authenticationUrl;
 
-    Login() {
+    Login(String authenticationUrl) {
         this.client = new OkHttpClient();
+        this.authenticationUrl = authenticationUrl;
     }
 
     LoginResult login(String email, String password) throws IOException {
@@ -51,7 +53,7 @@ class Login {
 
         // Create request for remote resource.
         Request request = new Request.Builder()
-                .url("https://open.mygaragedoor.tech/user/login")
+                .url(authenticationUrl + "/user/login")
                 .post(requestBody)
                 .build();
 
