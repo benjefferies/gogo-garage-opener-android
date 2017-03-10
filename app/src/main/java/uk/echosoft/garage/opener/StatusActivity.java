@@ -1,4 +1,4 @@
-package uk.echosoft.garageopener;
+package uk.echosoft.garage.opener;
 
 import android.content.*;
 import android.os.AsyncTask;
@@ -11,8 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-import java.util.concurrent.ExecutionException;
 
 public class StatusActivity extends AppCompatActivity {
 
@@ -29,25 +27,25 @@ public class StatusActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences("settings", 0);
         String uri = settings.getString("uri", "");
         this.garageOpener = new GarageOpener(uri, authToken);
-        setContentView(R.layout.activity_status);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setContentView(uk.echosoft.garage.opener.R.layout.activity_status);
+        Toolbar toolbar = (Toolbar) findViewById(uk.echosoft.garage.opener.R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_status, menu);
+        getMenuInflater().inflate(uk.echosoft.garage.opener.R.menu.menu_status, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_sign_out:
+            case uk.echosoft.garage.opener.R.id.action_sign_out:
                 Dialogs.signOut(this);
                 return super.onOptionsItemSelected(item);
-            case R.id.action_one_time_pin:
+            case uk.echosoft.garage.opener.R.id.action_one_time_pin:
                 new OneTimePinTask(this, garageOpener).execute();
                 return super.onOptionsItemSelected(item);
             default:
@@ -59,8 +57,8 @@ public class StatusActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        this.stateButton = (Button) findViewById(R.id.action_garage_state);
-        this.swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+        this.stateButton = (Button) findViewById(uk.echosoft.garage.opener.R.id.action_garage_state);
+        this.swipeRefreshLayout = (SwipeRefreshLayout) findViewById(uk.echosoft.garage.opener.R.id.swipe_layout);
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override

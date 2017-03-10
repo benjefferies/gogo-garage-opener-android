@@ -1,4 +1,4 @@
-package uk.echosoft.garageopener;
+package uk.echosoft.garage.opener;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

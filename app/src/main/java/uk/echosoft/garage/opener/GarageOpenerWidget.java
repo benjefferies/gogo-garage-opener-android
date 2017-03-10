@@ -1,4 +1,4 @@
-package uk.echosoft.garageopener;
+package uk.echosoft.garage.opener;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -26,12 +26,12 @@ public class GarageOpenerWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.garage_opener_widget);
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), uk.echosoft.garage.opener.R.layout.garage_opener_widget);
         Intent toggleGarageIntent = new Intent(context, GarageOpenerWidget.class);
         toggleGarageIntent.setAction(TOGGLE_GARAGE_ACTION);
         toggleGarageIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, toggleGarageIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.widget_button_garage_opener, pendingIntent);
+        remoteViews.setOnClickPendingIntent(uk.echosoft.garage.opener.R.id.widget_button_garage_opener, pendingIntent);
         appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
         // There may be multiple widgets active, so update all of them
         Intent loadState = new Intent(context, LoadStateService.class);

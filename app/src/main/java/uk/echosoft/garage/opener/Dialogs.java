@@ -1,4 +1,4 @@
-package uk.echosoft.garageopener;
+package uk.echosoft.garage.opener;
 
 import android.app.Activity;
 import android.content.*;
@@ -21,7 +21,7 @@ public class Dialogs {
 
     static AlertDialog oneTimePin(final Activity activity, final String oneTimePin) {
         return new AlertDialog.Builder(activity)
-                .setNeutralButton(R.string.button_copy, new DialogInterface.OnClickListener() {
+                .setNeutralButton(uk.echosoft.garage.opener.R.string.button_copy, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         ClipData clip = ClipData.newPlainText("One time pin", oneTimePin);
                         ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
