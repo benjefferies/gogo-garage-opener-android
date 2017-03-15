@@ -1,11 +1,9 @@
-package uk.echosoft.garageopener;
+package uk.echosoft.garage.opener;
 
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.TypedValue;
 import android.widget.RemoteViews;
 
@@ -29,9 +27,9 @@ public class LoadStateService extends IntentService {
         GarageOpener garageOpener = new GarageOpener(uri, authToken);
         try {
             String state = garageOpener.getGarageState();
-            RemoteViews views = new RemoteViews(getPackageName(), R.layout.garage_opener_widget);
-            views.setTextViewText(R.id.widget_button_garage_opener, state);
-            views.setTextViewTextSize(R.id.widget_button_garage_opener, TypedValue.COMPLEX_UNIT_SP, 12);
+            RemoteViews views = new RemoteViews(getPackageName(), uk.echosoft.garage.opener.R.layout.garage_opener_widget);
+            views.setTextViewText(uk.echosoft.garage.opener.R.id.widget_button_garage_opener, state);
+            views.setTextViewTextSize(uk.echosoft.garage.opener.R.id.widget_button_garage_opener, TypedValue.COMPLEX_UNIT_SP, 12);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
             int[] widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
             appWidgetManager.updateAppWidget(widgetIds, views);

@@ -1,4 +1,4 @@
-package uk.echosoft.garageopener;
+package uk.echosoft.garage.opener;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,7 +16,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        getMenuInflater().inflate(uk.echosoft.garage.opener.R.menu.menu_settings, menu);
 
         return true;
     }
@@ -24,19 +24,19 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        garageOpenerTextField = (EditText) findViewById(R.id.garage_opener_url);
+        setContentView(uk.echosoft.garage.opener.R.layout.activity_settings);
+        garageOpenerTextField = (EditText) findViewById(uk.echosoft.garage.opener.R.id.garage_opener_url);
         SharedPreferences settings = getSharedPreferences("settings", 0);
         String uri = settings.getString("uri", "");
         garageOpenerTextField.setText(uri);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(uk.echosoft.garage.opener.R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_save:
+            case uk.echosoft.garage.opener.R.id.action_save:
                 if (URLUtil.isValidUrl(garageOpenerTextField.getText().toString())) {
                     save();
                     return true;

@@ -1,4 +1,4 @@
-package uk.echosoft.garageopener;
+package uk.echosoft.garage.opener;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -42,14 +42,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(uk.echosoft.garage.opener.R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(uk.echosoft.garage.opener.R.layout.activity_login);
         SharedPreferences authentication = getSharedPreferences("authentication", 0);
         String authToken = authentication.getString("authToken", "");
         if (!"".equals(authToken)) {
@@ -59,10 +59,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         // Set up the login form.
-        emailView = (AutoCompleteTextView) findViewById(R.id.email);
+        emailView = (AutoCompleteTextView) findViewById(uk.echosoft.garage.opener.R.id.email);
 
-        passwordView = (EditText) findViewById(R.id.password);
-        Button signInButton = (Button) findViewById(R.id.action_sign_in);
+        passwordView = (EditText) findViewById(uk.echosoft.garage.opener.R.id.password);
+        Button signInButton = (Button) findViewById(uk.echosoft.garage.opener.R.id.action_sign_in);
         signInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,16 +70,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        loginFormView = findViewById(R.id.login_form);
-        progressView = findViewById(R.id.login_progress);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        loginFormView = findViewById(uk.echosoft.garage.opener.R.id.login_form);
+        progressView = findViewById(uk.echosoft.garage.opener.R.id.login_progress);
+        Toolbar toolbar = (Toolbar) findViewById(uk.echosoft.garage.opener.R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case uk.echosoft.garage.opener.R.id.action_settings:
                 openSettings();
                 return super.onOptionsItemSelected(item);
             default:
@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     .setIcon(android.R.drawable.ic_dialog_info)
                     .show();
         } else if (isEmailInvalid(email)) {
-            emailView.setError(getString(R.string.error_field_required));
+            emailView.setError(getString(uk.echosoft.garage.opener.R.string.error_field_required));
             emailView.requestFocus();
         } else {
             final String password = passwordView.getText().toString();
@@ -227,10 +227,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Login.LoginResult doInBackground(Void... params) {
             try {
                 return new Login(authenticationUrl).login(email, password);
-            } catch (UnknownHostException uhe) {
-                return Login.LoginResult.failure();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                return Login.LoginResult.failure();
             }
         }
 
@@ -244,7 +242,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 startActivity(intent);
                 finish();
             } else {
-                passwordView.setError(getString(R.string.error_incorrect_password));
+                passwordView.setError(getString(uk.echosoft.garage.opener.R.string.error_incorrect_password));
                 passwordView.requestFocus();
             }
         }
