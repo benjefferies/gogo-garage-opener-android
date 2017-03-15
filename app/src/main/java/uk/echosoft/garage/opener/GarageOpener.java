@@ -58,7 +58,7 @@ class GarageOpener {
         Type stringStringMap = new TypeToken<Map<String, String>>() {}.getType();
         Map<String, String> pinData = new Gson().fromJson(response.body().charStream(), stringStringMap);
         String pin = pinData.get("pin");
-        return String.format("%s/user/%s", uri, pin);
+        return String.format("%s/user/one-time-pin/%s", uri, pin);
     }
 
     private void checkAuthentication(Response response) throws NotAuthenticatedException {
