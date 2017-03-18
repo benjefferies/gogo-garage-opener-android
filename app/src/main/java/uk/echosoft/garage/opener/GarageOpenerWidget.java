@@ -5,7 +5,10 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 /**
  * Implementation of App Widget functionality.
@@ -37,6 +40,22 @@ public class GarageOpenerWidget extends AppWidgetProvider {
         Intent loadState = new Intent(context, LoadStateService.class);
         loadState.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
         context.startService(loadState);
+        SharedPreferences authentication = context.getSharedPreferences("authentication", 0);
+        String authToken = authentication.getString("authToken", "");
+        SharedPreferences settings = context.getSharedPreferences("settings", 0);
+        String uri = settings.getString("uri", "");
+        if ("".equals(uri) || "".equals(authToken)) {
+            Toast.makeText(context, "Configure settings and login", Toast.LENGTH_LONG).show();
+            Intent settingsIntent = new Intent(context, SettingsActivity.class);
+            settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent loginIntent = new Intent(context, LoginActivity.class);
+            loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            TaskStackBuilder.create( context )
+                    .addNextIntent(loginIntent)
+                    // use this method if you want "intentOnTop" to have it's parent chain of activities added to the stack. Otherwise, more "addNextIntent" calls will do.
+                    .addNextIntentWithParentStack(settingsIntent)
+                    .startActivities();
+        }
     }
 
     @Override

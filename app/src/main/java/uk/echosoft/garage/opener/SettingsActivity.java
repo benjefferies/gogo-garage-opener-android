@@ -37,7 +37,8 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case uk.echosoft.garage.opener.R.id.action_save:
-                if (URLUtil.isValidUrl(garageOpenerTextField.getText().toString())) {
+                String garageUrl = garageOpenerTextField.getText().toString();
+                if ("".equals(garageUrl) || URLUtil.isValidUrl(garageUrl)) {
                     save();
                     return true;
                 } else {

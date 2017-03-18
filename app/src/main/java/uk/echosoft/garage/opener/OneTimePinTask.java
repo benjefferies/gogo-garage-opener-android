@@ -1,6 +1,7 @@
 package uk.echosoft.garage.opener;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -21,7 +22,7 @@ class OneTimePinTask extends AsyncTask<Void, Void, String> {
         } catch (NotAuthenticatedException e) {
             Dialogs.unauthenticated(activity).show();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Log.w("toggle.one.time.pin", "Could not get one time pin", e);
         }
         return "";
     }

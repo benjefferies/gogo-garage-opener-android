@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.RemoteViews;
 
@@ -34,7 +35,7 @@ public class LoadStateService extends IntentService {
             int[] widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
             appWidgetManager.updateAppWidget(widgetIds, views);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Log.w("toggle.garage", "Could not load garage state", e);
         } catch (NotAuthenticatedException e) {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

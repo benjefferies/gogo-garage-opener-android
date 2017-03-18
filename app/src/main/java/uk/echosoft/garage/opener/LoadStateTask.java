@@ -3,6 +3,7 @@ package uk.echosoft.garage.opener;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ class LoadStateTask extends AsyncTask<Void, Void, String> {
         try {
             return garageOpener.getGarageState();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.w("toggle.load", "Could not get garage state", e);
         } catch (NotAuthenticatedException e) {
             Dialogs.unauthenticated(activity).show();
             activity.finish();
