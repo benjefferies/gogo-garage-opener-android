@@ -40,32 +40,25 @@ public class GarageOpenerWidget extends AppWidgetProvider {
         Intent loadState = new Intent(context, LoadStateService.class);
         loadState.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
         context.startService(loadState);
+        checkLoggedIn(context);
+    }
+
+    private void checkLoggedIn(Context context) {
         SharedPreferences authentication = context.getSharedPreferences("authentication", 0);
         String authToken = authentication.getString("authToken", "");
         SharedPreferences settings = context.getSharedPreferences("settings", 0);
         String uri = settings.getString("uri", "");
         if ("".equals(uri) || "".equals(authToken)) {
-            Toast.makeText(context, "Configure settings and login", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Login before using widget", Toast.LENGTH_LONG).show();
             Intent settingsIntent = new Intent(context, SettingsActivity.class);
-            settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Intent loginIntent = new Intent(context, LoginActivity.class);
-            loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            TaskStackBuilder.create( context )
-                    .addNextIntent(loginIntent)
-                    // use this method if you want "intentOnTop" to have it's parent chain of activities added to the stack. Otherwise, more "addNextIntent" calls will do.
-                    .addNextIntentWithParentStack(settingsIntent)
-                    .startActivities();
+            TaskStackBuilder intents = TaskStackBuilder.create(context)
+                    .addNextIntent(loginIntent);
+            if ("".equals(settings.getString("uri", ""))) {
+                intents.addNextIntentWithParentStack(settingsIntent);
+            }
+            intents.startActivities();
         }
-    }
-
-    @Override
-    public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
-    }
-
-    @Override
-    public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
     }
 
 }

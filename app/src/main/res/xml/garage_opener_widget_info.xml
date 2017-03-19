@@ -3,7 +3,7 @@
                     android:minWidth="40dp"
                     android:minHeight="40dp"
                     android:updatePeriodMillis="1800000"
-                    android:previewImage="@drawable/example_1_by_1_widget"
+                    android:previewImage="@drawable/widget"
                     android:initialLayout="@layout/garage_opener_widget"
                     android:widgetCategory="home_screen"
                     android:initialKeyguardLayout="@layout/garage_opener_widget"

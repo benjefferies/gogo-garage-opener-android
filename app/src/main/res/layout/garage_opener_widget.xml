@@ -1,13 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/widget_margin">
+                android:layout_height="match_parent">
 
     <Button
             android:id="@+id/widget_button_garage_opener"
             android:layout_width="wrap_content"
+            android:textColor="@drawable/widget_button_text_colour"
+            android:paddingTop="10dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/example_1_by_1_widget"/>
+            android:background="@drawable/widget"/>
 
 </RelativeLayout>
