@@ -1,6 +1,9 @@
 package uk.echosoft.garage.opener;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import java.io.IOException;
@@ -8,10 +11,10 @@ import java.io.IOException;
 class OneTimePinTask extends AsyncTask<Void, Void, String> {
 
     private GarageOpener garageOpener;
-    private StatusActivity activity;
+    private Handler handler;
 
-    public OneTimePinTask(StatusActivity activity, GarageOpener garageOpener) {
-        this.activity = activity;
+    OneTimePinTask(Handler handler, GarageOpener garageOpener) {
+        this.handler = handler;
         this.garageOpener = garageOpener;
     }
 
@@ -19,9 +22,12 @@ class OneTimePinTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... voids) {
         try {
             return garageOpener.getOneTimePin();
-        } catch (NotAuthenticatedException e) {
-            Dialogs.unauthenticated(activity).show();
-        } catch (IOException e) {
+        } catch (NotAuthenticatedException | IOException e) {
+            Bundle bundle = new Bundle();
+            bundle.putString("error", e.getClass().getSimpleName());
+            Message message = Message.obtain(handler);
+            message.setData(bundle);
+            message.sendToTarget();
             Log.w("toggle.one.time.pin", "Could not get one time pin", e);
         }
         return "";
@@ -30,7 +36,13 @@ class OneTimePinTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(final String oneTimePin) {
         super.onPostExecute(oneTimePin);
-        Dialogs.oneTimePin(activity, oneTimePin);
+        if (!"".equals(oneTimePin)) {
+            Bundle bundle = new Bundle();
+            bundle.putString("one-time-pin", oneTimePin);
+            Message message = Message.obtain(handler);
+            message.setData(bundle);
+            message.sendToTarget();
+        }
     }
 
 }

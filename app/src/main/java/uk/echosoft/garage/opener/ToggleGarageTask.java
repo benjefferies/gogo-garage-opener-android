@@ -1,7 +1,10 @@
 package uk.echosoft.garage.opener;
 
 import android.os.AsyncTask;
-import android.widget.TextView;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -9,14 +12,12 @@ import java.util.concurrent.TimeUnit;
 
 class ToggleGarageTask extends AsyncTask<Void, Void, String> {
 
-    private StatusActivity statusActivity;
-    private GarageOpener garageOpener;
-    private TextView textView;
+    private final Handler handler;
+    private final GarageOpener garageOpener;
 
-    ToggleGarageTask(StatusActivity statusActivity, GarageOpener garageOpener, TextView textView) {
-        this.statusActivity = statusActivity;
+    ToggleGarageTask(Handler handler, GarageOpener garageOpener) {
+        this.handler = handler;
         this.garageOpener = garageOpener;
-        this.textView = textView;
     }
 
     @Override
@@ -30,10 +31,13 @@ class ToggleGarageTask extends AsyncTask<Void, Void, String> {
                 TimeUnit.SECONDS.sleep(1);
             }
             return garageOpener.getGarageState();
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (NotAuthenticatedException e) {
-            Dialogs.unauthenticated(statusActivity).show();
+        } catch (IOException | InterruptedException | NotAuthenticatedException e) {
+            Bundle bundle = new Bundle();
+            bundle.putString("error", e.getClass().getSimpleName());
+            Message message = Message.obtain(handler);
+            message.setData(bundle);
+            message.sendToTarget();
+            Log.w("garage.opener.toggle", "Unable to get garage state", e);
         }
         return "";
     }
@@ -41,7 +45,11 @@ class ToggleGarageTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String state) {
         super.onPostExecute(state);
-        textView.setText(state);
+        Bundle bundle = new Bundle();
+        bundle.putString("state", state);
+        Message message = Message.obtain(handler);
+        message.setData(bundle);
+        message.sendToTarget();
     }
 
 }
