@@ -31,7 +31,7 @@ public class GarageOpenerWidget extends AppWidgetProvider {
             GarageOpener garageOpener = getGarageOpener(context);
             if (garageOpener == null) return;
             int[] appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-            UpdateWidgetHandler handler = new UpdateWidgetHandler(context, appWidgetIds);
+            UpdateWidgetHandler handler = new UpdateWidgetHandler(context, appWidgetIds, true);
             ToggleGarageTask toggleGarageTask = new ToggleGarageTask(handler, garageOpener);
             toggleGarageTask.execute();
         }
@@ -47,7 +47,7 @@ public class GarageOpenerWidget extends AppWidgetProvider {
         remoteViews.setOnClickPendingIntent(uk.echosoft.garage.opener.R.id.widget_button_garage_opener, pendingIntent);
         appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
 
-        UpdateWidgetHandler handler = new UpdateWidgetHandler(context, appWidgetIds);
+        UpdateWidgetHandler handler = new UpdateWidgetHandler(context, appWidgetIds, false);
         new LoadStateTask(getGarageOpener(context), handler).execute();
         checkLoggedIn(context);
     }
@@ -107,11 +107,13 @@ public class GarageOpenerWidget extends AppWidgetProvider {
 
         private Context context;
         private int[] widgetIds;
+        private boolean notify;
 
-        UpdateWidgetHandler(Context context, int[] widgetIds) {
+        UpdateWidgetHandler(Context context, int[] widgetIds, boolean notify) {
             super(Looper.getMainLooper());
             this.context = context;
             this.widgetIds = widgetIds;
+            this.notify = notify;
         }
 
         @Override
@@ -131,7 +133,9 @@ public class GarageOpenerWidget extends AppWidgetProvider {
             views.setTextViewTextSize(R.id.widget_button_garage_opener, TypedValue.COMPLEX_UNIT_SP, 12);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             appWidgetManager.updateAppWidget(widgetIds, views);
-            notificationStateChange(context, "Garage " + Language.convertAdjectiveToOppositeVerb(updatedState));
+            if (notify) {
+                notificationStateChange(context, "Garage " + Language.convertAdjectiveToOppositeVerb(updatedState));
+            }
         }
     }
 
