@@ -134,7 +134,7 @@ public class GarageOpenerWidget extends AppWidgetProvider {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             appWidgetManager.updateAppWidget(widgetIds, views);
             if (notify) {
-                notificationStateChange(context, "Garage " + Language.convertAdjectiveToOppositeVerb(updatedState));
+                notificationStateChange(context, "Garage " + updatedState);
             }
         }
     }
