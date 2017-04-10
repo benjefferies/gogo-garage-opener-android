@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.*;
 import android.support.v7.app.AlertDialog;
 
-public class Dialogs {
+class Dialogs {
 
     static AlertDialog unauthenticated(final Activity activity) {
         return new AlertDialog.Builder(activity)
@@ -53,4 +53,6 @@ public class Dialogs {
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
     }
+
+
 }

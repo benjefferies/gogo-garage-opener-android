@@ -25,7 +25,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 
 /**
  * A login screen that offers login via email/password.

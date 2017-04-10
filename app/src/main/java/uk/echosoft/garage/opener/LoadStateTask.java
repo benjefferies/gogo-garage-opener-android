@@ -1,35 +1,34 @@
 package uk.echosoft.garage.opener;
 
-import android.app.Activity;
 import android.os.AsyncTask;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.widget.TextView;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 
 import java.io.IOException;
 
 class LoadStateTask extends AsyncTask<Void, Void, String> {
 
-    private Activity activity;
-    private GarageOpener garageOpener;
-    private TextView textView;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private final Handler handler;
+    private final GarageOpener garageOpener;
 
-    LoadStateTask(Activity activity, GarageOpener garageOpener, TextView textView, SwipeRefreshLayout swipeRefreshLayout) {
-        this.activity = activity;
+    LoadStateTask(GarageOpener garageOpener, Handler handler) {
         this.garageOpener = garageOpener;
-        this.textView = textView;
-        this.swipeRefreshLayout = swipeRefreshLayout;
+        this.handler = handler;
     }
 
     @Override
     protected String doInBackground(Void... voids) {
         try {
             return garageOpener.getGarageState();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NotAuthenticatedException e) {
-            Dialogs.unauthenticated(activity).show();
-            activity.finish();
+        } catch (IOException | NotAuthenticatedException e) {
+            Bundle bundle = new Bundle();
+            bundle.putString("error", e.getClass().getSimpleName());
+            Message message = Message.obtain(handler);
+            message.setData(bundle);
+            message.sendToTarget();
+            Log.w("garage.opener.load", "Could not get garage state", e);
         }
         return "";
     }
@@ -37,7 +36,10 @@ class LoadStateTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String state) {
         super.onPostExecute(state);
-        textView.setText(state);
-        swipeRefreshLayout.setRefreshing(false);
+        Bundle bundle = new Bundle();
+        bundle.putString("state", state);
+        Message message = Message.obtain(handler);
+        message.setData(bundle);
+        message.sendToTarget();
     }
 }

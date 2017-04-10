@@ -28,8 +28,6 @@
                 android:name=".StatusActivity"
                 android:label="@string/app_name">
         </activity>
-        <service android:name=".LoadStateService"/>
-        <service android:name=".ToggleGarageService"/>
 
         <receiver android:name=".GarageOpenerWidget">
             <intent-filter>
