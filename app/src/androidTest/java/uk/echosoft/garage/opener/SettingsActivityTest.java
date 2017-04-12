@@ -1,17 +1,22 @@
 package uk.echosoft.garage.opener;
 
+import android.content.SharedPreferences;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.*;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -20,6 +25,12 @@ public class SettingsActivityTest {
 
     @Rule
     public ActivityTestRule<SettingsActivity> activityRule = new ActivityTestRule<>(SettingsActivity.class);
+
+    @Before
+    public void setUp() throws Exception {
+        SharedPreferences settings = getInstrumentation().getTargetContext().getSharedPreferences("settings", 0);
+        settings.edit().clear().apply();
+    }
 
     @Test
     public void shouldNotSetInvalidUrl() {
@@ -31,6 +42,8 @@ public class SettingsActivityTest {
 
         // Then
         onView(withId(R.id.garage_opener_url)).check(matches(hasErrorText("malformed url, must start with http:// or https://")));
+        SharedPreferences settings = getInstrumentation().getTargetContext().getSharedPreferences("settings", 0);
+        assertNull(settings.getString("uri", null));
     }
 
     @Test
@@ -42,7 +55,8 @@ public class SettingsActivityTest {
         onView(withId(R.id.action_save)).perform(click());
 
         // Then
-        assertTrue(activityRule.getActivity().isDestroyed());
+        SharedPreferences settings = getInstrumentation().getTargetContext().getSharedPreferences("settings", 0);
+        assertEquals(settings.getString("uri", null), "http://google.com");
     }
 
     @Test
@@ -54,6 +68,8 @@ public class SettingsActivityTest {
         onView(withId(R.id.action_save)).perform(click());
 
         // Then
-        assertTrue(activityRule.getActivity().isDestroyed());
+        SharedPreferences settings = getInstrumentation().getTargetContext().getSharedPreferences("settings", 0);
+        assertEquals(settings.getString("uri", null), "");
     }
+
 }
